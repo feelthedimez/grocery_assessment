@@ -1,5 +1,5 @@
 import logging
-from utilities.path_finder import get_path_to_file
+from .path_finder import get_path_to_file
 
 def get_file_handler() -> logging.FileHandler:
     """Set up the logger for files"""
