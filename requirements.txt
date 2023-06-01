@@ -2,3 +2,4 @@ behave
 gherkin3
 allure-behave
 selenium
+webdriver_manager

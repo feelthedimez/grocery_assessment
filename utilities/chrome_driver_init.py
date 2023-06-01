@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from .path_finder import get_path_to_file
 
 
 def initialize_driver():
@@ -11,11 +12,14 @@ def initialize_driver():
     """
 
     chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument("--headless") # Comment this out if you want to see the GUI
+
+    chrome_options.add_argument('ignore-certificate-errors')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+
     caps = DesiredCapabilities.CHROME
     caps["goog:loggingPrefs"] = {"performance": "ALL"}
 
     return webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()), options=chrome_options
-        )
+        executable_path=get_path_to_file('drivers', 'chromedriver.exe'),
+        options=chrome_options,
+    )

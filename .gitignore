@@ -8,3 +8,6 @@ __pypackages__/
 # Environments
 .env
 .venv
+./drivers
+drivers
+drivers/*
