@@ -140,7 +140,7 @@ def step_impl(context):
 
 @then(u'I add the product {product} with {items} items')
 def step_impl(context, product, items):
-    AmplifyEcommerce(context.driver).add_product_to_cart(product, items, add_to_cart=False)
+    AmplifyEcommerce(context.driver).add_product_to_cart(product_name=product, items_to_add=items, add_to_cart=False)
 
 
 @then(u'I decrease them to zero by the same {items} items amount for {product}')
@@ -157,3 +157,51 @@ def step_impl(context, product):
         message="The value of the items for that product is supposed to be zero",
         data=f"Current value: {current_value}"
     )
+
+
+@given(u'that I want to input the number of items for a product')
+def step_impl(context):
+    context.driver = initialize_driver()
+    log_to_allure(message="Inputting the value of the product items")
+
+
+@when(u'I login as previous steps as above, then input item {items} for product {product}')
+def step_impl(context, items, product):
+    context.execute_steps("When I login in to the e-commerce")
+    AmplifyEcommerce(context.driver).input_item_value(product_name=product, items_to_add=items)
+
+
+@when(u'I re-edit back to 0 items for product {product}')
+def step_impl(context, product):
+    context.product = product
+    AmplifyEcommerce(context.driver).input_item_value(product_name=product, items_to_add=0)
+
+
+@then(u'the button should not be clikable')
+def step_impl(context):
+
+    add_cart_btn = AmplifyEcommerce(context.driver).is_button_active(context.product)
+    
+    assert_with_allure(
+        condition=add_cart_btn==False,
+        message="The add cart button should not be clickable",
+        data=f"Is button clicable: {add_cart_btn}"
+    )
+
+
+@given(u'that I want to input a character instead of a number')
+def step_impl(context):
+    context.driver = initialize_driver()
+    log_to_allure(message="Inputting a letter in the product item number")
+
+
+@when(u'I login as previous steps and then input the letter {letter} for product {}')
+def step_impl(context, product, letter):
+    context.execute_steps("When I login in to the e-commerce")
+    context.product = product
+    AmplifyEcommerce(context.driver).input_item_value(product_name=product, items_to_add=letter)
+
+
+@then(u'the button should not be clickable as the above step')
+def step_impl(context):
+    context.execute_steps("Then the button should not be clikable")

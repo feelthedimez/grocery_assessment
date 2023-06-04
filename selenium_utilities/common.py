@@ -158,7 +158,6 @@ class SeleniumCore:
             element = WebDriverWait(driver=self.driver, timeout=5).until(
                 EC.element_to_be_clickable(locator)
             )
-
             return True
         except TimeoutException:
             return False

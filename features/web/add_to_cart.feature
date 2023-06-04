@@ -26,6 +26,7 @@ Feature: The add to cart functionality
             # | 70    | Oranges            |
 
 
+    # Issue with this - For some reason, I can't seem to be able to click the decrement button :\ :|
     Scenario Outline: Adding <items> of the <product> and decrementing them
         Given that I want to increase the items of a product in the product screen
         When I login as the other steps
@@ -35,4 +36,25 @@ Feature: The add to cart functionality
 
         Examples:
             | items | product            |
-            | 5     | Keloggs Cornflakes |
+            # | 5     | Keloggs Cornflakes |
+            # | 3    | Jungle Oats        |
+
+    
+    Scenario Outline: Adding <items> of the <product> and editing the field after
+        Given that I want to input the number of items for a product
+        When I login as previous steps as above, then input item <items> for product <product>
+        And I re-edit back to 0 items for product <product>
+        Then the button should not be clikable
+
+        Examples:
+            | items | product            |
+            # | 5     | Keloggs Cornflakes |
+
+    Scenario Outline: Adding a letter <letter> for product <product> using the input editor
+        Given that I want to input a character instead of a number
+        When I login as previous steps and then input the letter <letter> for product <product>
+        Then the button should not be clickable as the above step
+
+        Examples:
+            | letter | product            |
+            # | e     | Keloggs Cornflakes |

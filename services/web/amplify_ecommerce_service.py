@@ -1,6 +1,7 @@
 from time import sleep
 from selenium_utilities.common import SeleniumCore
 from selenium.webdriver import Chrome
+from selenium.common.exceptions import NoSuchElementException
 from utilities.project_logger import get_logger
 from utilities.read_properties import read_config_file
 from utilities.path_finder import get_path_to_file
@@ -58,7 +59,7 @@ class AmplifyEcommerce:
         parent_div = self.driver.find_element(by=parent_container[0], value=parent_container[1])
         return parent_div.find_elements(by=child_containers[0], value=child_containers[1])
 
-    def add_product_to_cart(self, product_name: str, items_to_add: str, add_to_cart: True) -> None:
+    def add_product_to_cart(self, product_name: str, items_to_add: str, add_to_cart: bool = True) -> None:
         """Add product to cart by deciding on the incrementor"""
         
         config_locator = self.locator_config
@@ -82,7 +83,7 @@ class AmplifyEcommerce:
                         add_to_cart_locator.click()
                     break
 
-            except Exception:
+            except NoSuchElementException:
                 pass
 
     def alert_message(self) -> str | None:
@@ -114,17 +115,40 @@ class AmplifyEcommerce:
                 product = child_div.find_element(by=goal_locator[0], value=goal_locator[1]).text
 
                 if product == product_name:
-                    decrement_locator = child_div.find_element(by=By.XPATH, value=config_locator['xpath']['minus_btn'])
-
+                    decrement = child_div.find_element(by=By.XPATH, value=config_locator['xpath']['minus_btn'])
+                    
                     for _ in range(int(items_to_add)):
-                        decrement_locator.click()
+                        decrement.click()
 
                     break
-            except Exception:
+            except NoSuchElementException:
+                pass
+    
+    def input_item_value(self, product_name: str, items_to_add: int):
+        """Input the value of product items"""
+        
+        self.selenium_core.wait_until_body_is_loaded()
+        
+        config_locator = self.locator_config
+        goal_locator= (By.XPATH, config_locator['xpath']['product_name'])
+
+        child_divs = self.children_product_elements()
+
+        for child_div in child_divs:
+            try:
+                product = child_div.find_element(by=goal_locator[0], value=goal_locator[1]).text
+
+                if product == product_name:
+                    incrementor_value = child_div.find_element(by=By.XPATH, value=config_locator['xpath']['incrementor_value'])
+
+                    incrementor_value.clear()
+                    incrementor_value.send_keys(items_to_add)
+                    
+                    break
+            except NoSuchElementException:
                 pass
 
-    
-    def get_current_item_value(self, product_name: str):
+    def get_current_item_value(self, product_name: str) -> str | None:
         """Get the current item value from the product"""
 
         config_locator = self.locator_config
@@ -139,10 +163,10 @@ class AmplifyEcommerce:
                 if product == product_name:
                     return self.selenium_core.get_value_from_element(locator=(By.XPATH, config_locator['xpath']['incrementor_value']))
 
-            except Exception:
-                pass
+            except NoSuchElementException:
+                return None
 
-    def is_button_active(self, product_name):
+    def is_button_active(self, product_name) -> bool | None:
         """Validate if the button is active"""
 
         config_locator = self.locator_config
@@ -159,5 +183,5 @@ class AmplifyEcommerce:
                     add_to_cart_locator = (By.XPATH, config_locator['xpath']['add_to_cart'])                    
                     return self.selenium_core.is_element_clickable(add_to_cart_locator) 
 
-            except Exception:
-                pass
+            except NoSuchElementException:
+                return None
