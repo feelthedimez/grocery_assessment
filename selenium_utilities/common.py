@@ -141,6 +141,15 @@ class SeleniumCore:
         except NoSuchElementException:
             logger.exception("Failed to locate element")
             return None
+        
+    def get_value_from_element(self, locator: tuple) -> str | None:
+        """Extracting the attribute value from an element (usually input fields)"""
+
+        try:
+            return self.driver.find_element(by=locator[0], value=locator[1]).get_attribute("value")
+        except NoSuchElementException:
+            logger.exception("Failed to locate element")
+            return None
     
     def is_element_clickable(self, locator: tuple) -> bool:
         """Checks if an element located by the provided locator is clickable."""

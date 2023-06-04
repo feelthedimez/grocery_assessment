@@ -9,7 +9,7 @@ def log_to_allure(message: str, data: any = None) -> None:
     """Log an allure step"""
 
     with allure.step(f"{message}: {data if data != None else ''}"):
-        logger.info("{}: {}".format(message, data if data != None else ''))
+        logger.info("{} {}".format(message, data if data != None else ''))
 
 
 def allure_screenshot(driver: Chrome, message: str = "Result screenshot") -> None:

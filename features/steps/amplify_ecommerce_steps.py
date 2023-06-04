@@ -4,6 +4,7 @@ from utilities.read_properties import read_config_file
 from services.web.amplify_ecommerce_service import AmplifyEcommerce
 from utilities.chrome_driver_init import initialize_driver
 from utilities.allure_methods import *
+from time import sleep
 
 logger = get_logger(logger_name=__name__)
 config_file = read_config_file(section='auth')
@@ -79,7 +80,11 @@ def step_impl(context):
 
 @when(u'I add {items} of {product} and I click add to cart')
 def step_impl(context, items, product):
-    AmplifyEcommerce(context.driver).add_product_to_cart(product, items)
+    AmplifyEcommerce(context.driver).add_product_to_cart(
+        product_name=product, 
+        items_to_add=items,
+        add_to_cart=True
+        )
 
 
 @then(u'I should see "You have just added {items} of {product} to cart" message')
@@ -110,6 +115,45 @@ def step_impl(context, items, product):
     AmplifyEcommerce(context.driver).add_product_to_cart(product, items, add_to_cart=False)
 
 
-@then(u'I should have a button become disabled')
+@then(u'I should have a button become disabled for product {product}')
+def step_impl(context, product):
+    
+    add_cart_btn = AmplifyEcommerce(context.driver).is_button_active(product)
+    
+    assert_with_allure(
+        condition=add_cart_btn==False,
+        message="The add cart button should not be clickable",
+        data=f"Is button clicable: {add_cart_btn}"
+    )
+
+
+@given(u'that I want to increase the items of a product in the product screen')
 def step_impl(context):
-    pass
+    context.driver = initialize_driver()
+    log_to_allure(message="Increasing and decreasing items to zero")
+
+
+@when(u'I login as the other steps')
+def step_impl(context):
+    context.execute_steps("When I login in to the e-commerce")
+
+
+@then(u'I add the product {product} with {items} items')
+def step_impl(context, product, items):
+    AmplifyEcommerce(context.driver).add_product_to_cart(product, items, add_to_cart=False)
+
+
+@then(u'I decrease them to zero by the same {items} items amount for {product}')
+def step_impl(context, items, product):
+    AmplifyEcommerce(context.driver).decrement_products(product, items)
+
+
+@then(u'I should see zero on the amount of items to add for {product}')
+def step_impl(context, product):
+    current_value = AmplifyEcommerce(context.driver).get_current_item_value(product_name=product)
+
+    assert_with_allure(
+        condition=current_value==0,
+        message="The value of the items for that product is supposed to be zero",
+        data=f"Current value: {current_value}"
+    )
