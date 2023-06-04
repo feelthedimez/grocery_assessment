@@ -92,3 +92,24 @@ def step_impl(context, items, product):
         message="Validate if the add to cart messages alerts are the same",
         data=f"Feature: {message}. \nWebApp: {message_from_web}"
     )
+
+
+@given(u'that I want to add the exceeded number of products in cart')
+def step_impl(context):
+    context.driver = initialize_driver()
+    log_to_allure(message="Adding an exceed amount of products to cart")
+
+
+@when(u'I login in to the e-commerce like the previous step')
+def step_impl(context):
+    context.execute_steps("When I login in to the e-commerce")
+
+
+@when(u'I exceed the number {items} of {product}')
+def step_impl(context, items, product):
+    AmplifyEcommerce(context.driver).add_product_to_cart(product, items, add_to_cart=False)
+
+
+@then(u'I should have a button become disabled')
+def step_impl(context):
+    pass

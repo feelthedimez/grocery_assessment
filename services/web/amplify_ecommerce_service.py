@@ -47,17 +47,25 @@ class AmplifyEcommerce:
 
         return products
 
-    def add_product_to_cart(self, product_name, items_to_add) -> None:
-        """Add product to cart by deciding on the incrementor"""
-        
+    def children_product_elements(self):
+        """All products elements from the parent element"""
+
         config_locator = self.locator_config
     
         parent_container = (By.XPATH, config_locator['xpath']['parents_products'])
         child_containers = (By.TAG_NAME, config_locator['tag']['child_product'])
-        goal_locator= (By.XPATH, config_locator['xpath']['product_name'])
 
         parent_div = self.driver.find_element(by=parent_container[0], value=parent_container[1])
-        child_divs = parent_div.find_elements(by=child_containers[0], value=child_containers[1])
+        return parent_div.find_elements(by=child_containers[0], value=child_containers[1])
+
+
+    def add_product_to_cart(self, product_name, items_to_add, add_to_cart: True) -> None:
+        """Add product to cart by deciding on the incrementor"""
+        
+        config_locator = self.locator_config
+        goal_locator= (By.XPATH, config_locator['xpath']['product_name'])
+
+        child_divs = self.children_product_elements()
 
         for child_div in child_divs:
             try:
@@ -70,7 +78,8 @@ class AmplifyEcommerce:
                     for _ in range(int(items_to_add)):
                         self.selenium_core.click(increment_locator)
                     
-                    self.selenium_core.click(add_to_cart_locator)
+                    if add_to_cart:
+                        self.selenium_core.click(add_to_cart_locator)
                     break
 
             except Exception:
@@ -78,7 +87,7 @@ class AmplifyEcommerce:
 
     def alert_message(self) -> str | None:
         """Extract the alert message after adding product to cart"""
-        
+
         config_locator = self.locator_config
         alert_locator = (By.XPATH, config_locator['xpath']['add_alert'])
 

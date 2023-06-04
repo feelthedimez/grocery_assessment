@@ -2,6 +2,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import JavascriptException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from utilities.project_logger import get_logger
 from selenium.webdriver.common.by import By
@@ -140,4 +141,15 @@ class SeleniumCore:
         except NoSuchElementException:
             logger.exception("Failed to locate element")
             return None
-        
+    
+    def is_element_clickable(self, locator: tuple) -> bool:
+        """Checks if an element located by the provided locator is clickable."""
+
+        try:
+            element = WebDriverWait(driver=self.driver, timeout=5).until(
+                EC.element_to_be_clickable(locator)
+            )
+
+            return True
+        except TimeoutException:
+            return False
