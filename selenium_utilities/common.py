@@ -4,6 +4,9 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver.support import expected_conditions as EC
 from utilities.project_logger import get_logger
+from selenium.webdriver.common.by import By
+from time import sleep
+from utilities.allure_methods import allure_screenshot
 
 logger = get_logger(logger_name=__name__)
 
@@ -49,7 +52,24 @@ class SeleniumCore:
         
         return True
 
-    def _create_a_highlight(self, locator: tuple, color):
+    def children_in_parent(self, child_locator: tuple, parent_locator: tuple, goal_locator: tuple) -> list:
+        """Extract values from a parent element"""
+
+        parent_div = self.driver.find_element(by=parent_locator[0], value=parent_locator[1])
+        child_divs = parent_div.find_elements(by=child_locator[0], value=child_locator[1])
+
+        product_names = []
+
+        for child_div in child_divs:
+            try:
+                product_name = child_div.find_element(by=goal_locator[0], value=goal_locator[1]).text
+                product_names.append(product_name)
+            except NoSuchElementException:
+                continue
+        
+        return product_names
+
+    def _create_a_highlight(self, locator: tuple, color) -> None:
         """Create a highlight for an element with a border"""
 
         highlight_js = f"""
@@ -64,7 +84,7 @@ class SeleniumCore:
         except JavascriptException:
             logger.exception("Could not create a highlight")
 
-    def _remove_a_highlight(self, locator: tuple):
+    def _remove_a_highlight(self, locator: tuple) -> None:
         """Remove a highlight for an element with a border"""
 
         remove_highlight = f"""
@@ -79,7 +99,35 @@ class SeleniumCore:
         except JavascriptException:
             logger.exception("Could not remove the highlight")
 
-    def get_current_url(self):
+    def wait_until_body_is_loaded(self, timeout: float = 10) -> None:
+        """Wait until the body has finished rendering"""
+        try:
+            WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        except Exception:
+            logger.exception("An error occured while waiting for the body to load")
+
+    def get_full_screenshot(self, message: str = "Full screenshot"):
+        """Take the entire webpage a screenshot"""
+        
+        self.wait_until_body_is_loaded()
+        
+        original_size = self.driver.get_window_size()
+        required_width = self.driver.execute_script('return document.body.parentNode.scrollWidth')
+        required_height = self.driver.execute_script('return document.body.parentNode.scrollHeight')
+
+        self.driver.set_window_size(required_width, required_height)
+        allure_screenshot(driver=self.driver, message=message)
+        self.driver.set_window_size(original_size['width'], original_size['height'])
+
+    def highlight_and_screenshot(self, locator: tuple, color: str = "red", message: str = "Took screenshot") -> None:
+        """Highlight an element and then screenshot"""
+
+        self.wait_until_body_is_loaded()
+        self._create_a_highlight(locator=locator, color=color)
+        allure_screenshot(driver=self.driver, message=message)
+        self._remove_a_highlight(locator=locator) 
+
+    def get_current_url(self) -> str:
         """Method of the WebDriver interface to get the current URL of the web page"""
 
         return self.driver.current_url
