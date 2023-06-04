@@ -34,8 +34,8 @@ def assert_with_allure(condition: bool = None, message: str = None, data: any = 
     with allure.step(f"{message}: {data}"):
 
         if not condition:
-            logger.error("{}: {}".format(message, data))
+            logger.error("{}: \n{}".format(message, data))
         else:
-            logger.info("{}: {}".format(message, data))
+            logger.info("{}: \n{}".format(message, data))
 
         assert condition, message

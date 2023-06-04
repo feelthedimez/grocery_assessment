@@ -7,7 +7,7 @@ Feature: The Amplify app e-commerce search functionality
 
         Examples:
             | category |
-            # | Veggies  |
+            | Veggies  |
 
 
     Scenario Outline: Search for the valid product category: <category>

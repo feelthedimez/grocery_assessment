@@ -46,3 +46,48 @@ class AmplifyEcommerce:
         )
 
         return products
+
+    def add_product_to_cart(self, product_name, items_to_add) -> None:
+        """Add product to cart by deciding on the incrementor"""
+        
+        config_locator = self.locator_config
+    
+        parent_container = (By.XPATH, config_locator['xpath']['parents_products'])
+        child_containers = (By.TAG_NAME, config_locator['tag']['child_product'])
+        goal_locator= (By.XPATH, config_locator['xpath']['product_name'])
+
+        parent_div = self.driver.find_element(by=parent_container[0], value=parent_container[1])
+        child_divs = parent_div.find_elements(by=child_containers[0], value=child_containers[1])
+
+        for child_div in child_divs:
+            try:
+                product = child_div.find_element(by=goal_locator[0], value=goal_locator[1]).text
+
+                if product == product_name:
+                    increment_locator = (By.XPATH, config_locator['xpath']['plus_btn'])
+                    add_to_cart_locator = (By.XPATH, config_locator['xpath']['add_to_cart'])
+
+                    for _ in range(int(items_to_add)):
+                        self.selenium_core.click(increment_locator)
+                    
+                    self.selenium_core.click(add_to_cart_locator)
+                    break
+
+            except Exception:
+                pass
+
+    def alert_message(self) -> str | None:
+        """Extract the alert message after adding product to cart"""
+        
+        config_locator = self.locator_config
+        alert_locator = (By.XPATH, config_locator['xpath']['add_alert'])
+
+        alert_msg = self.selenium_core.get_text_from_element(locator=alert_locator)
+
+        self.selenium_core.highlight_and_screenshot(
+            locator=alert_locator,
+            message="Alert message popped up",
+            color="green"
+        )
+        
+        return alert_msg

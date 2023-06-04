@@ -131,3 +131,13 @@ class SeleniumCore:
         """Method of the WebDriver interface to get the current URL of the web page"""
 
         return self.driver.current_url
+    
+    def get_text_from_element(self, locator: tuple) -> str | None:
+        """Extracting text from a web element"""
+
+        try:
+            return self.driver.find_element(by=locator[0], value=locator[1]).text
+        except NoSuchElementException:
+            logger.exception("Failed to locate element")
+            return None
+        
