@@ -11,3 +11,5 @@ __pypackages__/
 ./drivers
 drivers
 drivers/*
+allure-*
+reports/

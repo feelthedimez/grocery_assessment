@@ -111,7 +111,7 @@ class AmplifyEcommerce:
         self.selenium_core.highlight_and_screenshot(
             locator=alert_locator,
             message="Alert message popped up",
-            color="green"
+            color="purple"
         )
         
         return alert_msg
@@ -158,6 +158,12 @@ class AmplifyEcommerce:
                     incrementor_value.clear()
                     incrementor_value.send_keys(items_to_add)
                     
+                    self.selenium_core.highlight_and_screenshot(
+                        locator=(By.XPATH, config_locator['xpath']['incrementor_value']),
+                        message="The input field",
+                        color="red"
+                    )
+                    
                     break
             except NoSuchElementException:
                 pass
@@ -194,7 +200,12 @@ class AmplifyEcommerce:
 
                 if product == product_name:
                     logger.info(product_name)
-                    add_to_cart_locator = (By.XPATH, config_locator['xpath']['add_to_cart'])                    
+                    add_to_cart_locator = (By.XPATH, config_locator['xpath']['add_to_cart'])
+                    self.selenium_core.highlight_and_screenshot(
+                        locator=(By.XPATH, config_locator['xpath']['add_to_cart']),
+                        message="Button highlighted",
+                        color="purple"
+                    )                   
                     return self.selenium_core.is_element_clickable(add_to_cart_locator) 
 
             except NoSuchElementException:
