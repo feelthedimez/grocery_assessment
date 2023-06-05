@@ -8,7 +8,7 @@ logger = get_logger(logger_name=__name__)
 def log_to_allure(message: str, data: any = None) -> None:
     """Log an allure step"""
 
-    with allure.step(f"{message}: {data if data != None else ''}"):
+    with allure.step(f"{message}\n{data if data != None else ''}"):
         logger.info("{} {}".format(message, data if data != None else ''))
 
 

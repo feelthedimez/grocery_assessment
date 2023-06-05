@@ -8,9 +8,9 @@ Feature: The add to cart functionality
 
         Examples:
             | items | product            |
-            # | 5     | Keloggs Cornflakes |
-            # | 6     | Jungle Oats        |
-            # | 1     | Oranges            |
+            | 5     | Keloggs Cornflakes |
+            | 6     | Jungle Oats        |
+            | 1     | Oranges            |
 
 
     Scenario Outline: Adding <items> of <product> to cart
@@ -21,9 +21,9 @@ Feature: The add to cart functionality
 
         Examples:
             | items | product            |
-            # | 50    | Keloggs Cornflakes |
-            # | 60    | Jungle Oats        |
-            # | 70    | Oranges            |
+            | 50    | Keloggs Cornflakes |
+            | 60    | Jungle Oats        |
+            | 70    | Oranges            |
 
 
     # Issue with this - For some reason, I can't seem to be able to click the decrement button :\ :|
@@ -36,8 +36,8 @@ Feature: The add to cart functionality
 
         Examples:
             | items | product            |
-            # | 5     | Keloggs Cornflakes |
-            # | 3    | Jungle Oats        |
+            | 5     | Keloggs Cornflakes |
+            | 3    | Jungle Oats        |
 
     
     Scenario Outline: Adding <items> of the <product> and editing the field after
@@ -48,7 +48,7 @@ Feature: The add to cart functionality
 
         Examples:
             | items | product            |
-            # | 5     | Keloggs Cornflakes |
+            | 5     | Keloggs Cornflakes |
 
     Scenario Outline: Adding a letter <letter> for product <product> using the input editor
         Given that I want to input a character instead of a number
@@ -57,4 +57,4 @@ Feature: The add to cart functionality
 
         Examples:
             | letter | product            |
-            # | e     | Keloggs Cornflakes |
+            | e     | Keloggs Cornflakes |

@@ -8,7 +8,7 @@ Feature: The e-commerce cart feature
 
         Examples:
             | items | product            |
-            # | 5     | Keloggs Cornflakes |
+            | 5     | Keloggs Cornflakes |
 
 
     Scenario Outline: Add items to cart and check the total
@@ -20,7 +20,7 @@ Feature: The e-commerce cart feature
 
         Examples:
             | item_list | product_list |
-            # | 5, 4, 5   | Keloggs All Bran, Grapes, Apples |
+            | 5, 4, 5   | Keloggs All Bran, Grapes, Apples |
 
     Scenario Outline: Add <items> items of <product> to cart and then removing them from cart
         Given that I want to add a product to cart

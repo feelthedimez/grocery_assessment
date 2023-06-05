@@ -33,6 +33,8 @@ class AmplifyEcommerce:
         url = f"https://{username}:{password}@{config_auth['auth_url']}"
         self.selenium_core.get_url(url=url)
 
+        self.screenshot(message="Logged In")
+
     def search_category(self, category: str) -> None:
         """Search for a specific category"""
 
@@ -89,6 +91,10 @@ class AmplifyEcommerce:
                     
                     if add_to_cart:
                         add_to_cart_locator.click()
+                        self.selenium_core.highlight_and_screenshot(
+                            locator=(By.XPATH, config_locator['xpath']['add_to_cart']),
+                            message="Added product to cart"
+                        )
                     break
 
             except NoSuchElementException:
@@ -198,6 +204,7 @@ class AmplifyEcommerce:
         """Navigating to the specials page"""
 
         config_locator = self.locator_config
+        self.selenium_core.highlight_and_screenshot(locator=(By.XPATH, config_locator['xpath']['specials_nav']), color="red")
         self.selenium_core.click(locator=(By.CSS_SELECTOR, config_locator['css']['specials_nav']))
         sleep(3)
 
@@ -233,10 +240,14 @@ class AmplifyEcommerce:
         return self.selenium_core.get_current_url()
     
     def total_cost_cart(self):
-        """ """
+        """Total price extracted from the UI"""
 
         config_locator = self.locator_config
         total = self.selenium_core.get_text_from_element(locator=(By.CSS_SELECTOR, config_locator['css']['cart_total']))
+        self.selenium_core.highlight_and_screenshot(
+            locator=(By.XPATH, config_locator['xpath']['xpath_cart_total']),
+            message="Total price"
+        )
 
         return self.extract_money(money_string=total)
 
@@ -258,11 +269,17 @@ class AmplifyEcommerce:
 
         config_locator = self.locator_config
         self.selenium_core.click(locator=(By.XPATH, config_locator['xpath']['cart_icon']))
+        self.selenium_core.get_full_screenshot(message="Cart page")
 
     def extract_items_number_cart(self) -> int:
         """Extract the number of items in a cart from the cart icon"""
 
         config_locator = self.locator_config
+        self.selenium_core.highlight_and_screenshot(
+            locator=(By.XPATH, config_locator['xpath']['xpath_cart_counter']),
+            color="red",
+            message="Cart counter"
+        )
         return int(self.selenium_core.get_text_from_element(locator=(By.CSS_SELECTOR, config_locator['css']['cart_counter'])))
     
     def increment_cart(self) -> None:
@@ -270,7 +287,6 @@ class AmplifyEcommerce:
 
         config_locator = self.locator_config
         self.selenium_core.click(locator=(By.XPATH, config_locator['xpath']['increment_cart']))
-
 
     def decrement_cart(self) -> None:
         """Click on the decrement button in the cart"""
