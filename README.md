@@ -30,7 +30,7 @@ a. Create a virtual environment
 pip install virtualenv 
 virtualenv .venv
 # if the above fails, then run:
-python -m virtualenv
+python -m virtualenv .venv
 ```
 
 b. Activate the virtual environment
