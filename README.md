@@ -70,12 +70,12 @@ This is going to generate the results inside a newly created folder called `repo
 
 ### Generate a clean report
 
-Now, we're on the last step. We need to install allure.
+Now, we're on the last step. We need to install `allure`.
 
 Linux/MacOS:
 
 1. Go to Github: (https://github.com/allure-framework/allure2/releases)
-2. Download the .tgz file
+2. Download the `.tgz` file
 3. Then run the following commands:
 
     ```bash
@@ -87,7 +87,7 @@ Linux/MacOS:
 Windows:
 
 1. Go to Github: (https://github.com/allure-framework/allure2/releases)
-2. Download the .zip file
+2. Download the `.zip` file
 3. Then, unzip it.
 4. Copy folder `allure-2.22.1` to the `C:\Program Files\` drive in windows
 5. Then go to `Windows Environmental Varibales`
