@@ -68,7 +68,16 @@ behave -f allure_behave.formatter:AllureFormatter -o reports/ features/web
 
 This is going to generate the results inside a newly created folder called `reports`.
 
-### Generate a clean report
+
+## Generate a clean report using `Live Server` or some kind of other server.
+
+The instructions on generating a report using allure maybe complex. For easier use, you can open the allure report _(assuming that the results have already been generated)_ using the `Live Server` from VS Code.
+
+Install the extension.
+
+Then execute the `Live Server`, and then open the folder `allure-report`.
+
+### Generate a clean report using Allure
 
 Now, we're on the last step. We need to install `allure`.
 
