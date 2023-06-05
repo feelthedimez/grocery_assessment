@@ -15,11 +15,12 @@ def initialize_driver():
 
     chrome_options.add_argument('ignore-certificate-errors')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    chrome_options.add_argument('--headless') # comment this out if you wish to see the gui
 
     caps = DesiredCapabilities.CHROME
     caps["goog:loggingPrefs"] = {"performance": "ALL"}
 
     return webdriver.Chrome(
-        executable_path=get_path_to_file('drivers', 'chromedriver.exe'),
+        service=Service(ChromeDriverManager().install()),
         options=chrome_options,
     )
