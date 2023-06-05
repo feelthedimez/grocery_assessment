@@ -155,7 +155,7 @@ class SeleniumCore:
         """Checks if an element located by the provided locator is clickable."""
 
         try:
-            element = WebDriverWait(driver=self.driver, timeout=5).until(
+            WebDriverWait(driver=self.driver, timeout=5).until(
                 EC.element_to_be_clickable(locator)
             )
             return True
